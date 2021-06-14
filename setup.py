@@ -39,7 +39,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     author='Phanxuan Phuc',
-    author_email='phucpx@ftech.ai',
+    author_email='phanxuanphucnd@gmail.com',
     classifiers=[
         'Programming Language :: Python :: 3.x',
     ],
