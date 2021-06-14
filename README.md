@@ -1,13 +1,13 @@
 ## Table of contents
 
 1. [Instroduction](#introduction)
-2. [How to use `August`](#how_to_use)
+2. [How to use `Arizona-spotting`](#how_to_use)
    - [Installation](#installation)
    - [Data structrue](#data_structure)
    - [Example usage](#usage)
 4. [Reference](#reference)
 
-# <a name='introduction'></a> August
+# <a name='introduction'></a> Arizona-spotting
 
 Keyword-Transformer is an Transformer architecture for Keyword spotting problem. Keywords spotting (in other words, Voice Trigger or Wake-up Words Detection) is a very important research problem, is used to detect specific-words from a stream of audio, typically in a low-power always-on setting such as smart speakers and mobile phones or detect profanity-words in live-streaming.
 
