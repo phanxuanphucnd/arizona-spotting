@@ -9,19 +9,64 @@
 
 # <a name='introduction'></a> August
 
-Keyword-Transformer is an architecture using Transformer for Keyword spotting problem
+Keyword-Transformer is an Transformer architecture for Keyword spotting problem. Keywords spotting (in other words, Voice Trigger or Wake-up Words Detection) is a very important research problem, is used to detect specific-words from a stream of audio, typically in a low-power always-on setting such as smart speakers and mobile phones or detect profanity-words in live-streaming.
 
 # <a name='how_to_use'></a> How to use
 
 ## <a name='installation'></a> Installation
 
+```js
+
+```
+
 ## <a name='data_structure'></a> Data structure
 
+```
+data
+    gsc_v2.1
+        train
+            active
+                right_1.wav
+                right_2.wav
+                ...
+            
+            non_active
+                on_1.wav
+                on_2.wav
+                ...
+
+            ...
+
+        valid
+
+        test
+
+```
+
 ## <a name='usage'></a> Example usage
+
+### Training
+
+```py
+
+```
+
+### Evaluation
+
+```py
+
+```
+
+### Inference
+
+```py
+
+```
 
 
 # <a name='reference'></a> Reference
 
+1. Axel Berg, Mark O'Connor and Miguel Tairum Cruz: “[Keyword Transformer: A Self-Attention Model for Keyword Spotting](https://arxiv.org/pdf/2104.00769v2.pdf)”, in arXiv:2104.00769, 2021.
 
 
 # License
@@ -51,5 +96,6 @@ Keyword-Transformer is an architecture using Transformer for Keyword spotting pr
   
 # Author
 
-- Name: Phan Xuan Phuc
-- Email: phanxuanphucnd@gmail.com
+August was developed by Phuc Phan © Copyright 2021.
+
+For any questions or comments, please contact the following email: phanxuanphucnd@gmail.com
