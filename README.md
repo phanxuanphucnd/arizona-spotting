@@ -96,6 +96,6 @@ data
   
 # Author
 
-August was developed by Phuc Phan © Copyright 2021.
+Arizona-spotting was developed by Phuc Phan © Copyright 2021.
 
 For any questions or comments, please contact the following email: phanxuanphucnd@gmail.com
