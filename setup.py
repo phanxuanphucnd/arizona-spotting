@@ -32,7 +32,7 @@ VERSION = os.getenv('PACKAGE_VERSION', 'v0.0.1')[1:]
 setup(
     name='arizona_spotting',
     version=VERSION,
-    description='Arizona_spotting is a library for keywords spotting problem.',
+    description='Arizona-spotting is a library for keywords spotting problem.',
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url='',
