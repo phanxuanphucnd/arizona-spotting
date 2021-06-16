@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from operator import mod
 import os
 import torch
 import librosa
