@@ -9,17 +9,31 @@
 
 # <a name='introduction'></a> Arizona-spotting
 
-Keyword-Transformer is an Transformer architecture for Keyword spotting problem. Keywords spotting (in other words, Voice Trigger or Wake-up Words Detection) is a very important research problem, is used to detect specific-words from a stream of audio, typically in a low-power always-on setting such as smart speakers and mobile phones or detect profanity-words in live-streaming.
+Arizona-spotting is a library provide Transformer architectures for Keyword spotting problem. Keywords spotting (in other words, Voice Trigger or Wake-up Words Detection) is a very important research problem, is used to detect specific-words from a stream of audio, typically in a low-power always-on setting such as smart speakers and mobile phones or detect profanity-words in live-streaming.
 
-# <a name='how_to_use'></a> How to use
+We provide two main architecture:
 
-## <a name='installation'></a> Installation
+1. Keywords-Transformer [1]
+
+2. Wav2KWS [2]
+
+# <a name='how_to_use'></a> How to use Arizona-spotting
+
+## Installation <a name='installation'></a>
 
 ```js
+>>> git@github.com:phanxuanphucnd/Arizona-spotting.git
 
+>>> cd Arizona-spotting
+
+>>> python setup.py bdist_wheel
+
+>>> pip install dist/arizona_spotting-0.0.1-py3-none-any.whl 
+
+>>> pip install dist/fairseq-1.0.0a0+9b5b09b-cp36-cp36m-linux_x86_64.whl
 ```
 
-## <a name='data_structure'></a> Data structure
+## <a name='data_structure'></a> Data Structure
 
 ```
 data
@@ -48,26 +62,111 @@ data
 ### Training
 
 ```py
+from autumn.models import Wav2KWS
+from autumn.datasets import Wav2KWSDataset
+from autumn.learners import Wav2KWSLearner
 
+train_dataset = Wav2KWSDataset(
+    mode='train',
+    root='./data/gsc_v2.1/'
+)
+test_dataset = Wav2KWSDataset(
+    mode='test',
+    root='./data/gsc_v2.1/'
+)
+
+model = Wav2KWS(
+    num_classes=2,
+    encoder_hidden_dim=768,
+    out_channels=112,
+    pretrained_model='wav2vec-base-en'
+)
+
+learner = Wav2KWSLearner(model=model)
+learner.train(
+    train_dataset=train_dataset,
+    test_dataset=test_dataset,
+    batch_size=48,
+    encoder_learning_rate=1e-5,
+    decoder_learning_rate=5e-4,
+    weight_decay=1e-5,
+    max_steps=10,
+    n_epochs=100,
+    num_workers=4,
+    shuffle=True,
+    view_model=True,
+    save_path='./models',
+    model_name='wav2kws_model'
+)
 ```
 
 ### Evaluation
 
 ```py
+from autumn.models import Wav2KWS
+from autumn.datasets import Wav2KWSDataset
+from autumn.learners import Wav2KWSLearner
+    
+test_dataset = Wav2KWSDataset(
+    mode='test',
+    root='./data/gsc_v2.1'
+)
 
+model = Wav2KWS(
+    num_classes=2,
+    encoder_hidden_dim=768,
+    out_channels=112,
+    pretrained_model='wav2vec-base-en'
+)
+
+learner = Wav2KWSLearner(model=model)
+learner.load_model(model_path='./models/wav2kws_model_0.97_v2.1.pt')
+_, acc = learner.evaluate(
+    test_dataset=test_dataset,
+    batch_size=48,
+    num_workers=4,
+    view_classification_report=True
+)
+
+print(f"\nAccuracy: {acc} \n ")
 ```
 
 ### Inference
 
 ```py
+from datetime import datetime
+from autumn.models import Wav2KWS
+from autumn.datasets import Wav2KWSDataset
+from autumn.learners import Wav2KWSLearner
 
+
+model = Wav2KWS(
+    num_classes=2,
+    encoder_hidden_dim=768,
+    out_channels=112,
+    pretrained_model='wav2vec-base-en'
+)
+
+learner = Wav2KWSLearner(model=model)
+learner.load_model(model_path='./models/wav2kws_model.pt')
+
+now = datetime.now()
+
+output = learner.inference(input='data/gsc_v2.1/test/active/5f01c798_nohash_1.wav')
+
+print(output)
+
+print(f"\nInference time: {(datetime.now() - now) * 1000} ms")
 ```
 
 
 # <a name='reference'></a> Reference
 
-1. Axel Berg, Mark O'Connor and Miguel Tairum Cruz: “[Keyword Transformer: A Self-Attention Model for Keyword Spotting](https://arxiv.org/pdf/2104.00769v2.pdf)”, in arXiv:2104.00769, 2021.
+[1] Axel Berg, Mark O'Connor and Miguel Tairum Cruz: “[Keyword Transformer: A Self-Attention Model for Keyword Spotting](https://arxiv.org/pdf/2104.00769v2.pdf)”, in arXiv:2104.00769, 2021.
 
+[2] D.J Seo, H.S Oh and Y.C Jung: “[Wav2KWS: Transfer Learning from Speech Representations for Keyword Spotting](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9427206)”, in IEEE 2021.
+
+[3] Alexei Baevski, Henry Zhou, Abdelrahman Mohamed and Michael Auli: “[wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations](https://arxiv.org/pdf/2006.11477.pdf)”, in arXiv:2006.11477, 2020.
 
 # License
 
