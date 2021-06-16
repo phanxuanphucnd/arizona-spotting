@@ -62,9 +62,9 @@ data
 ### Training
 
 ```py
-from autumn.models import Wav2KWS
-from autumn.datasets import Wav2KWSDataset
-from autumn.learners import Wav2KWSLearner
+from arizona_spotting.models import Wav2KWS
+from arizona_spotting.datasets import Wav2KWSDataset
+from arizona_spotting.learners import Wav2KWSLearner
 
 train_dataset = Wav2KWSDataset(
     mode='train',
@@ -103,9 +103,9 @@ learner.train(
 ### Evaluation
 
 ```py
-from autumn.models import Wav2KWS
-from autumn.datasets import Wav2KWSDataset
-from autumn.learners import Wav2KWSLearner
+from arizona_spotting.models import Wav2KWS
+from arizona_spotting.datasets import Wav2KWSDataset
+from arizona_spotting.learners import Wav2KWSLearner
     
 test_dataset = Wav2KWSDataset(
     mode='test',
@@ -135,9 +135,9 @@ print(f"\nAccuracy: {acc} \n ")
 
 ```py
 from datetime import datetime
-from autumn.models import Wav2KWS
-from autumn.datasets import Wav2KWSDataset
-from autumn.learners import Wav2KWSLearner
+from arizona_spotting.models import Wav2KWS
+from arizona_spotting.datasets import Wav2KWSDataset
+from arizona_spotting.learners import Wav2KWSLearner
 
 
 model = Wav2KWS(
