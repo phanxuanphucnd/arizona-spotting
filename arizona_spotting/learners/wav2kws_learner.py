@@ -8,13 +8,14 @@ import numpy as np
 import torch.nn as nn
 
 from tqdm import tqdm
-from typing import Any, Union
+from typing import Any, Union, List
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix, classification_report
 
 from arizona_spotting.models import Wav2KWS
 from arizona_spotting.utils.print_utils import *
 from arizona_spotting.datasets import Wav2KWSDataset
+from arizona_spotting.utils.misc_utils import extract_loudest_section
 from arizona_spotting.utils.visualize_utils import plot_confusion_matrix
 
 class Wav2KWSLearner():
@@ -225,7 +226,7 @@ class Wav2KWSLearner():
         batch_size: int=48,
         num_workers: int=4,
         criterion: Any=None,
-        model_type: str='binary',
+        model_type: str=None,
         view_classification_report: bool=True
     ):
         _collate_fn = test_dataset._collate_fn
@@ -286,7 +287,63 @@ class Wav2KWSLearner():
 
         return loss, acc
 
-    def inference(self, input: Union[str, Any]):
-        """Inference a given sample. """
+    def inference(
+        self,
+        input: Union[str, List],
+        loudest_section: bool=True,
+        sample_rate: int=1600
+    ):
+        """Inference a given sample from a file path or a List's float values. """
+
+        self.model.eval()
+
+        if isinstance(input, str):
+            # Check file input exists
+            if input and os.path.exists(input):
+                wav, curr_sample_rate = sf.read(input)
+
+            else:
+                print(f"Warning: The `input` not exists or broken. Set the values of the `input` is zero. ")
+                wav, curr_sample_rate = np.zeros(self.sample_rate, dtype=np.float32), self.sample_rate
+
+        else:
+            wav, curr_sample_rate = input, sample_rate
+            
+        if curr_sample_rate !=  self.sample_rate:
+            wav, curr_sample_rate = librosa.resample(wav, curr_sample_rate, self.sample_rate), self.sample_rate
+
+        if len(wav.shape) == 2:
+            wav = librosa.to_mono(wav.transpose(1, 0))
+
+        if loudest_section:
+            wav = extract_loudest_section(wav, win_len=30)
         
-        return 
+        wav_len = len(wav)
+        if wav_len < self.sample_rate:
+            pad_size = self.sample_rate - wav_len
+            wav = np.pad(wav, (round(pad_size / 2) + 1, round(pad_size / 2) + 1), 'constant', constant_values=0)
+
+        wav_len = len(wav)
+        mid = int(len(wav) / 2)
+        cut_off = int(self.sample_rate / 2)
+        wav = wav[mid - cut_off: mid + cut_off]
+
+        feats = torch.from_numpy(wav).float()
+        # feats = self.postprocess(feats, curr_sample_rate)
+        x = {
+            'source': feats.unsqueeze(0)
+        }
+        for k in x.keys():
+            x[k] = x[k].to(self.device)
+
+        with torch.no_grad():
+            output = self.model(x)
+
+        if self.model_type == 'binary':
+            pred = torch.sigmoid(output)
+            pred = pred[:, -1]
+            pred = pred.view(-1).data.cpu().numpy()[0]
+        else:
+            pred = output.data.max(0, keepdim=True)[1]
+            
+        return (pred, self.idx2label.get(int(pred)))
