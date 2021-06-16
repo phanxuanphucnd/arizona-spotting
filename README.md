@@ -11,7 +11,7 @@
 
 Arizona-spotting is a library provide Transformer architectures for Keyword spotting problem. Keywords spotting (in other words, Voice Trigger or Wake-up Words Detection) is a very important research problem, is used to detect specific-words from a stream of audio, typically in a low-power always-on setting such as smart speakers and mobile phones or detect profanity-words in live-streaming.
 
-We provide two main architecture:
+We provide two main SoTA architectures:
 
 1. Keywords-Transformer [1]
 
