@@ -14,6 +14,7 @@ class Wav2KWS(nn.Module):
     def __init__(
         self,
         num_classes: int=2,
+        model_type: str='binary', 
         encoder_hidden_dim: int=768,
         out_channels: int=112,
         pretrained_model: str='wav2vec-base-en'
@@ -21,6 +22,11 @@ class Wav2KWS(nn.Module):
         super(Wav2KWS, self).__init__()
 
         self.num_classes = num_classes
+        self.model_type = model_type.lower()
+        if model_type == 'binary':
+            self.output = 1
+        else:
+            self.output = self.num_classes
 
         self.PRETRAINED_MODEL_MAPPING = {
             'wav2vec-base-en': 'https://dl.fbaipublicfiles.com/fairseq/wav2vec/wav2vec_small.pt',
@@ -50,10 +56,8 @@ class Wav2KWS(nn.Module):
             nn.Conv1d(out_channels, out_channels, 1),
             nn.BatchNorm1d(out_channels),
             nn.ReLU(),
-            nn.Conv1d(out_channels, self.num_classes, 1)
+            nn.Conv1d(out_channels, self.output, 1)
         )
-
-        self.softmax = nn.Softmax(dim=-1)
 
     def forward(self, x):
         output = self.w2v_encoder(**x, features_only=True)
@@ -62,7 +66,8 @@ class Wav2KWS(nn.Module):
         output = output.reshape(b, c, t)
         output = self.decoder(output).squeeze()
 
-        if self.training:
+        if self.training and self.model_type != 'binary':
+            self.softmax = nn.Softmax(dim=-1)
             return self.softmax(output)
         else:
             return output

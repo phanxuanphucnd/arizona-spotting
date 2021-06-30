@@ -16,6 +16,7 @@ def test_train():
 
     model = Wav2KWS(
         num_classes=2,
+        model_type='binary',
         encoder_hidden_dim=768,
         out_channels=112,
         pretrained_model='wav2vec-base-en'
