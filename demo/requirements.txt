@@ -1,0 +1,7 @@
+streamlit
+streamlit-webrtc
+pydub
+soundfile
+numpy
+pandas
+ast
