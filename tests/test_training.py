@@ -7,11 +7,13 @@ def test_train():
 
     train_dataset = Wav2KWSDataset(
         mode='train',
-        root='./data/gsc/'
+        read_dtype='int16',
+        root='./data/gsc_v2.0/'
     )
     test_dataset = Wav2KWSDataset(
-        mode='test',
-        root='./data/gsc/'
+        mode='valid',
+        read_dtype='int16',
+        root='./data/gsc_v2.0/'
     )
 
     model = Wav2KWS(
@@ -26,11 +28,11 @@ def test_train():
     learner.train(
         train_dataset=train_dataset,
         test_dataset=test_dataset,
-        batch_size=48,
+        batch_size=64,
         encoder_learning_rate=1e-5,
         decoder_learning_rate=5e-4,
         weight_decay=1e-5,
-        n_epochs=100,
+        n_epochs=1,
         num_workers=4,
         shuffle=True,
         view_model=True,

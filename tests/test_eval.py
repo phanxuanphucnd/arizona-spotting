@@ -19,10 +19,10 @@ def test_evaluate():
     )
 
     learner = Wav2KWSLearner(model=model)
-    learner.load_model(model_path='./models/wav2kws_model.pt')
+    learner.load_model(model_path='models/wav2kws_model.pt')
     _, acc = learner.evaluate(
         test_dataset=test_dataset,
-        batch_size=48,
+        batch_size=64,
         num_workers=4,
         view_classification_report=True
     )
