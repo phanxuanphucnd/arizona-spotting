@@ -13,9 +13,9 @@ Arizona-spotting is a library provide Transformer architectures for Keyword spot
 
 We provide two main SoTA architectures:
 
-1. Wav2KWS [1](#paper_1) [2](#paper_2)
+1. Wav2KWS [[1]](#paper_1) [[2]](#paper_2)
 
-2. Keywords-Transformer [3](#paper_3)
+2. Keywords-Transformer [[3]](#paper_3)
 
 
 # <a name='how_to_use'></a> How to use Arizona-spotting
