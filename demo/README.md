@@ -1,5 +1,6 @@
 ## DEMO 
 
+A version demo for `Keyword spotting` problem with **[Streamlit](https://streamlit.io/)**.
 
 ### How to usage
 
@@ -10,6 +11,7 @@
 >>> cd demo/
 
 >>> pip install -r requirements.txt
+
 ```
 
 #### Running:

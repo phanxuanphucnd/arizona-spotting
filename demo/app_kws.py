@@ -36,7 +36,7 @@ from streamlit_webrtc import (
 ### Parameters config:
 
 THRESHOLD = 0.5
-MIN_FRAMES = 1
+MIN_FRAMES = 2
 PADDING_NUMBER = 10
 WINDOW_SIZE =  1 # second
 WINDOW_STEP = 0.25 # second
@@ -44,7 +44,8 @@ SAMPLE_RATE = 16000
 WIDTH_PREDICTION = 10
 WIDTH_LINE_CHART = 10
 TEMP_DIR = tempfile.mkdtemp()
-SERVE_MODEL_URL = 'http://192.168.1.11:8081/api/infer/'
+SERVE_MODEL_WAV2KWS_URL = 'http://192.168.1.11:8081/api/infer/'
+SERVE_MODEL_KWT_URL = 'http://192.168.20.109:5000/kws'
 
 
 
@@ -62,6 +63,15 @@ wav_beep = s_beep.get_array_of_samples()
 
 def main():
     st.title("Real Time Keywords Spotting")
+    st.markdown(
+        """
+        _Copyright (c) 2021 Voice NLP_
+
+        """
+    )
+    st.text("\n")
+    st.text("\n")
+    st.text("\n")
     st.header(
     """
 
@@ -72,9 +82,10 @@ def main():
     
     st.markdown(
         """
-        This demo is using ``Wav2KWS architecture`` from [Denver-Spotting](https://gitlab.ftech.ai/nlp/research/denver-spotting), an in-house library.
+        This demo is using ``Wav2KWS`` or ``KWT`` architectures.
         """
     )
+    st.text("\n")
 
     sound_only_page = "Sound only (sendonly)"
     with_video_page = "With video (sendrecv)"
@@ -85,23 +96,46 @@ def main():
     architecture_mode = st.selectbox("Choose the architecture mode", [wav2kws_model, kwt_model])
 
     if app_mode == sound_only_page and architecture_mode == wav2kws_model:
-        app_kws(
-            url=SERVE_MODEL_URL,
-            sample_rate=SAMPLE_RATE,
-            window_size=WINDOW_SIZE,
-            window_step=WINDOW_STEP
-        )
+        try:
+            app_kws(
+                url=SERVE_MODEL_WAV2KWS_URL,
+                sample_rate=SAMPLE_RATE,
+                window_size=WINDOW_SIZE,
+                window_step=WINDOW_STEP
+            )
+        except:
+            st.markdown(f"Model ``Wav2KWS`` not served! :sunglasses:")
     elif app_mode == sound_only_page and architecture_mode == kwt_model:
-        st.write('Model KWT not served! :sunglasses:')
+        try:
+            app_kws(
+                url=SERVE_MODEL_KWT_URL,
+                sample_rate=SAMPLE_RATE,
+                window_size=WINDOW_SIZE,
+                window_step=WINDOW_STEP
+            )
+        except:
+            st.markdown(f"Model ``KWT`` not served! :sunglasses:")
     elif app_mode == with_video_page and architecture_mode == wav2kws_model:
-        app_kws_with_video(
-            url=SERVE_MODEL_URL,
-            sample_rate=SAMPLE_RATE,
-            window_size=WINDOW_SIZE,
-            window_step=WINDOW_STEP
-        )
+        try:
+            app_kws_with_video(
+                url=SERVE_MODEL_WAV2KWS_URL,
+                sample_rate=SAMPLE_RATE,
+                window_size=WINDOW_SIZE,
+                window_step=WINDOW_STEP
+            )
+        except:
+            st.markdown(f"Model ``Wav2KWS`` not served! :sunglasses:")
     else:
-        st.write('Mode with_video_page not supported! :sunglasses:')
+        try:
+            app_kws_with_video(
+                url=SERVE_MODEL_KWT_URL,
+                sample_rate=SAMPLE_RATE,
+                window_size=WINDOW_SIZE,
+                window_step=WINDOW_STEP
+            )
+        except:
+            st.markdown(f"Model ``KWT`` not served! :sunglasses:")
+    
 
 
 def app_kws(url: str, sample_rate: int=16000, window_size: int=1, window_step: float=0.25):
@@ -131,9 +165,6 @@ def app_kws(url: str, sample_rate: int=16000, window_size: int=1, window_step: f
     placeholder_processed_audio = st.empty()
 
     all_sound = pydub.AudioSegment.empty()
-    # all_processed_sound = pydub.AudioSegment.empty()
-    # sound_chunk = pydub.AudioSegment.empty()
-    # sound_buffer = pydub.AudioSegment.empty()
 
     count = 0
     active_ids = []

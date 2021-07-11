@@ -33,17 +33,26 @@ class Wav2KWS(nn.Module):
             'wav2vec-large-en': 'https://dl.fbaipublicfiles.com/fairseq/wav2vec/libri960_big.pt'
         }
 
-        if pretrained_model not in self.PRETRAINED_MODEL_MAPPING:
-            raise ValueError(f"The `pretrained_model` must be in ['wav2vec-base-en', wav2vec-large-en']. ")
-        else:
+        if os.path.isfile(pretrained_model):
+            self.pretrained_model_path = os.path.abspath(pretrained_model)            
+        elif pretrained_model in self.PRETRAINED_MODEL_MAPPING:
             url = self.PRETRAINED_MODEL_MAPPING[pretrained_model.lower()]
             f_name = pretrained_model + '.pt'
             dest = './.denver/'
             download_url(url, dest, f_name)
             self.pretrained_model_path = os.path.abspath(dest + f_name)
+        else:
+            raise ValueError(
+                f"The `pretrained_model` must be in ['wav2vec-base-en', wav2vec-large-en'] or path to the `Wav2vec` pretrain model. "
+            )
 
         state_dict = torch.load(self.pretrained_model_path)
-        cfg = convert_namespace_to_omegaconf(state_dict['args'])
+        
+        if state_dict['args'] is None:
+            cfg = state_dict['cfg']
+        else:
+            cfg = convert_namespace_to_omegaconf(state_dict['args'])
+        
         task = tasks.setup_task(cfg.task)
         
         self.w2v_encoder = task.build_model(cfg.model)

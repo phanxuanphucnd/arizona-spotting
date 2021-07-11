@@ -387,5 +387,5 @@ def get_build_criterion(model_type):
 
 criterion_registry = {
     'binary': nn.BCEWithLogitsLoss(),
-    'multi-classes': nn.CrossEntropyLoss()
+    'multi-class': nn.CrossEntropyLoss()
 }

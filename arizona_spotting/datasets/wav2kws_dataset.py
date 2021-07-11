@@ -7,14 +7,17 @@ import librosa
 import numpy as np
 import soundfile as sf
 
-from typing import Any, Dict, Union, List
+from scipy.io import wavfile
+from typing import Any, Union, List
 from fairseq.data.audio.raw_audio_dataset import *
+from arizona_spotting.utils.misc_utils import extract_loudest_section, get_from_registry
 
 class Wav2KWSDataset(RawAudioDataset):
     def __init__(
         self,
         mode: str='train',
         root: str='',
+        read_dtype: str='int16',
         sample_rate: int=16000,
         loudest_section: bool=True,
         silence_percentage: float=0.1,
@@ -31,6 +34,7 @@ class Wav2KWSDataset(RawAudioDataset):
 
         self.mode = mode
         self.root = root
+        self.read_dtype = read_dtype
         self.mode_root = os.path.join(root, self.mode)
         self.sample_rate = sample_rate        
         self.ap = tf_audio_processor
@@ -110,7 +114,7 @@ class Wav2KWSDataset(RawAudioDataset):
         f_path, cmd, id = self.data[idx]
 
         if f_path and os.path.exists(f_path):
-            wav, curr_sample_rate = sf.read(f_path)
+            wav, curr_sample_rate = sf.read(f_path, dtype=self.read_dtype)
             if curr_sample_rate != self.sample_rate:
                 wav, curr_sample_rate = librosa.resample(wav, curr_sample_rate, self.sample_rate), self.sample_rate
 
@@ -118,14 +122,15 @@ class Wav2KWSDataset(RawAudioDataset):
                 wav = librosa.to_mono(wav.transpose(1, 0))
             
             if self.loudest_section:
-                wav = self.extract_loudest_section(wav)
+                wav = extract_loudest_section(wav)
 
             wav_len = len(wav)
             if wav_len < self.sample_rate:
                 pad_size = self.sample_rate - wav_len
                 wav = np.pad(wav, (round(pad_size / 2) + 1, round(pad_size / 2) + 1), 'constant', constant_values=0)
         else:
-            wav, curr_sample_rate = np.zeros(self.sample_rate, dtype=np.float32), self.sample_rate
+            type_ = get_build_type(self.read_dtype)
+            wav, curr_sample_rate = np.zeros(self.sample_rate, dtype=type_), self.sample_rate
 
         wav_len = len(wav)
         mid = int(len(wav) / 2)
@@ -162,23 +167,6 @@ class Wav2KWSDataset(RawAudioDataset):
 
         return {'id': id, 'target': y, 'source': feats}
 
-    def extract_loudest_section(self, wav, win_len=30):
-        wav_len = len(wav)
-        temp = abs(wav)
-        st, et = 0, 0
-        max_dec = 0
-
-        for ws in range(0, wav_len, win_len):
-            cur_dec = temp[ws: ws + 16000].sum()
-            if cur_dec >= max_dec:
-                max_dec = cur_dec
-                st, et = ws, ws + 16000
-                
-            if ws + 16000 > wav_len:
-                break
-
-        return wav[st: et]
-
     def __len__(self):
         return len(self.data)
 
@@ -197,7 +185,7 @@ class Wav2KWSDataset(RawAudioDataset):
         return weight
 
     def _collate_fn(self, samples):
-        sub_samples = [s for s in samples if s['target'] is not None]
+        sub_samples = [s for s in samples if s['source'] is not None]
         if len(sub_samples) == 0:
             return {}
 
@@ -205,4 +193,13 @@ class Wav2KWSDataset(RawAudioDataset):
         batch['target'] = torch.LongTensor([s['target'] for s in sub_samples])
 
         return batch
-        
+
+def get_build_type(type_):
+    return get_from_registry(type_, type_registry)
+
+type_registry = {
+    'int16': np.int16,
+    'int32': np.int32,
+    'float32': np.float32,
+    'float64': np.float64
+}

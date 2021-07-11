@@ -22,6 +22,23 @@ def get_from_registry(key, registry):
     else:
         raise ValueError(f"Key `{key}` not supported, available options: {registry.keys()}")
 
+def extract_loudest_section(wav, win_len=30):
+    wav_len = len(wav)
+    temp = abs(wav)
+    st, et = 0, 0
+    max_dec = 0
+
+    for ws in range(0, wav_len, win_len):
+        cur_dec = temp[ws: ws + 16000].sum()
+        if cur_dec >= max_dec:
+            max_dec = cur_dec
+            st, et = ws, ws + 16000
+            
+        if ws + 16000 > wav_len:
+            break
+
+    return wav[st: et]
+
 def download_url(url:str, dest:str, name:str, overwrite:bool=False):
     """Download the model from `url` and save it to `dest` with the name is `name`
 
@@ -35,7 +52,6 @@ def download_url(url:str, dest:str, name:str, overwrite:bool=False):
         os.makedirs(dest)
 
     if os.path.exists(dest + name) and not overwrite:
-        print(f"File `{dest + name}` already exists!")
         return
 
     print(f"Downloading file from: {url}")
