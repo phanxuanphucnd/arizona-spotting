@@ -13,9 +13,10 @@ Arizona-spotting is a library provide Transformer architectures for Keyword spot
 
 We provide two main SoTA architectures:
 
-1. Keywords-Transformer [1]
+1. Wav2KWS [1](#paper_1) [2](#paper_2)
 
-2. Wav2KWS [2]
+2. Keywords-Transformer [3](#paper_3)
+
 
 # <a name='how_to_use'></a> How to use Arizona-spotting
 
@@ -162,11 +163,12 @@ print(f"\nInference time: {(datetime.now() - now) * 1000} ms")
 
 # <a name='reference'></a> Reference
 
-[1] Axel Berg, Mark O'Connor and Miguel Tairum Cruz: “[Keyword Transformer: A Self-Attention Model for Keyword Spotting](https://arxiv.org/pdf/2104.00769v2.pdf)”, in arXiv:2104.00769, 2021.
+<a name='paper_1'></a> 1] D.J Seo, H.S Oh and Y.C Jung: “[Wav2KWS: Transfer Learning from Speech Representations for Keyword Spotting](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9427206)”, in IEEE 2021.
 
-[2] D.J Seo, H.S Oh and Y.C Jung: “[Wav2KWS: Transfer Learning from Speech Representations for Keyword Spotting](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9427206)”, in IEEE 2021.
+<a name='paper_2'></a> [2] Alexei Baevski, Henry Zhou, Abdelrahman Mohamed and Michael Auli: “[wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations](https://arxiv.org/pdf/2006.11477.pdf)”, in arXiv:2006.11477, 2020.
 
-[3] Alexei Baevski, Henry Zhou, Abdelrahman Mohamed and Michael Auli: “[wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations](https://arxiv.org/pdf/2006.11477.pdf)”, in arXiv:2006.11477, 2020.
+<a name='paper_3'></a> [3] Axel Berg, Mark O'Connor and Miguel Tairum Cruz: “[Keyword Transformer: A Self-Attention Model for Keyword Spotting](https://arxiv.org/pdf/2104.00769v2.pdf)”, in arXiv:2104.00769, 2021.
+
 
 # License
 
