@@ -1,4 +1,4 @@
-# from arizona_spotting.models import Wav2KWS
+# from arizona.keyword_spotting.models import Wav2KWS
 
 # model = Wav2KWS(
 #     num_classes=2,

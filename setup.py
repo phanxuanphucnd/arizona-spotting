@@ -30,9 +30,9 @@ except:
 VERSION = os.getenv('PACKAGE_VERSION', 'v0.0.1')[1:]
 
 setup(
-    name='arizona_spotting',
+    name='arizona',
     version=VERSION,
-    description='Arizona-spotting is a library for keywords spotting problem.',
+    description='arizona-spotting is a library for keywords spotting problem.',
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url='',
@@ -44,12 +44,12 @@ setup(
         'Programming Language :: Python :: 3.x',
     ],
     install_requires=reqs,
-    keywords='arizona_spotting',
+    keywords='arizona',
     python_requires='>=3.6',
-    py_modules=['arizona_spotting'],
+    py_modules=['arizona'],
     # entry_points={
     #     'console_scripts': [
-    #         'arizona_spotting = arizona_spotting.run_cli:entry_point'
+    #         'arizona = arizona.run_cli:entry_point'
     #     ]
     # },
 )

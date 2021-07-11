@@ -16,11 +16,11 @@ from typing import Any, List, Union
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix, classification_report
 
-from arizona_spotting.models import Wav2KWS
-from arizona_spotting.utils.print_utils import *
-from arizona_spotting.datasets import Wav2KWSDataset
-from arizona_spotting.utils.misc_utils import get_from_registry
-from arizona_spotting.utils.visualize_utils import plot_confusion_matrix
+from arizona.utils.print_utils import *
+from arizona.keyword_spotting.models import Wav2KWS
+from arizona.utils.misc_utils import get_from_registry
+from arizona.keyword_spotting.datasets import Wav2KWSDataset
+from arizona.utils.visualize_utils import plot_confusion_matrix
 
 class Wav2KWSLearner():
     def __init__(

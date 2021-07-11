@@ -8,7 +8,7 @@ from fairseq import tasks
 from typing import Any, Union
 from fairseq.dataclass.utils import convert_namespace_to_omegaconf
 
-from arizona_spotting.utils.misc_utils import download_url
+from arizona.utils.misc_utils import download_url
 
 class Wav2KWS(nn.Module):
     def __init__(

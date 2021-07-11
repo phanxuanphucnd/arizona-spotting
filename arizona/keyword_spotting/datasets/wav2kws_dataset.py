@@ -10,7 +10,7 @@ import soundfile as sf
 from scipy.io import wavfile
 from typing import Any, Union, List
 from fairseq.data.audio.raw_audio_dataset import *
-from arizona_spotting.utils.misc_utils import extract_loudest_section, get_from_registry
+from arizona.utils.misc_utils import extract_loudest_section, get_from_registry
 
 class Wav2KWSDataset(RawAudioDataset):
     def __init__(
