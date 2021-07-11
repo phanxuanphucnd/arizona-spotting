@@ -58,14 +58,16 @@ data
 
 ```
 
+You can using **[Google Command Dataset](https://ai.googleblog.com/2017/08/launching-speech-commands-dataset.html)** to testing the model.
+
 ## <a name='usage'></a> Example usage
 
 ### Training
 
 ```py
-from arizona_spotting.models import Wav2KWS
-from arizona_spotting.datasets import Wav2KWSDataset
-from arizona_spotting.learners import Wav2KWSLearner
+from arizona.keyword_spotting.models import Wav2KWS
+from arizona.keyword_spotting.datasets import Wav2KWSDataset
+from arizona.keyword_spotting.learners import Wav2KWSLearner
 
 train_dataset = Wav2KWSDataset(
     mode='train',
@@ -78,6 +80,7 @@ test_dataset = Wav2KWSDataset(
 
 model = Wav2KWS(
     num_classes=2,
+    model_type='binary',  # or model_type='multi-class'
     encoder_hidden_dim=768,
     out_channels=112,
     pretrained_model='wav2vec-base-en'
@@ -104,9 +107,9 @@ learner.train(
 ### Evaluation
 
 ```py
-from arizona_spotting.models import Wav2KWS
-from arizona_spotting.datasets import Wav2KWSDataset
-from arizona_spotting.learners import Wav2KWSLearner
+from arizona.keyword_spotting.models import Wav2KWS
+from arizona.keyword_spotting.datasets import Wav2KWSDataset
+from arizona.keyword_spotting.learners import Wav2KWSLearner
     
 test_dataset = Wav2KWSDataset(
     mode='test',
@@ -115,6 +118,7 @@ test_dataset = Wav2KWSDataset(
 
 model = Wav2KWS(
     num_classes=2,
+    model_type='binary',  # or model_type='multi-class'
     encoder_hidden_dim=768,
     out_channels=112,
     pretrained_model='wav2vec-base-en'
@@ -136,13 +140,14 @@ print(f"\nAccuracy: {acc} \n ")
 
 ```py
 from datetime import datetime
-from arizona_spotting.models import Wav2KWS
-from arizona_spotting.datasets import Wav2KWSDataset
-from arizona_spotting.learners import Wav2KWSLearner
+from arizona.keyword_spotting.models import Wav2KWS
+from arizona.keyword_spotting.datasets import Wav2KWSDataset
+from arizona.keyword_spotting.learners import Wav2KWSLearner
 
 
 model = Wav2KWS(
     num_classes=2,
+    model_type='binary',  # or model_type='multi-class'
     encoder_hidden_dim=768,
     out_channels=112,
     pretrained_model='wav2vec-base-en'
